@@ -1,0 +1,27 @@
+create (c1:country{name:"india"}),
+        (c2:country{name:"china"}),
+        (s1:state{name:"maharashta"}),
+        (s2:state{name:"gujurat"}),
+        (s3:state{name:"bejing"}),
+        (s4:state{name:"yon tho"}),
+        (p1:product{name:"oil"}),
+        (p2:product{name:"sugarcane"})
+
+create (c1)-[:has_state]->(s1),
+        (c1)-[:has_state]->(s2),
+        (c2)-[:has_state]->(s3),
+        (c2)-[:has_state]->(s4),
+        (c1)-[:produce{percentage:"75"}]->(p2),
+        (c1)-[:produce{percentage:"50"}]->(p1),
+        (c2)-[:produce{percentage:"60"}]->(p2),
+        (c2)-[:produce{percentage:"55"}]->(p1),
+        (c1)-[:export]->(p1),
+        (c1)-[:export]->(p2),
+        (c2)-[:import]->(p1),
+        (c2)-[:import]->(p2) return c1,c2,s1,s2,s3,s4,p1,p2
+
+A: match(c:country)-[:export]->(p:product) where p.name="oil" return c
+B: match(p:product)<-[:produce]-(c:country)-[:has_state]->(s:state) where s.name="maharashta" return p
+C: match(c:country)-[p1:produce]->(p:product) where p1.percentage > "70" return c
+D: match(c:country)-[:export]->(p:product) return c
+
